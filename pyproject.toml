@@ -1,0 +1,97 @@
+[project]
+name = "baark"
+version = "0.1.0"
+description = "Typed sync and async Python SDK for Bark push notifications"
+readme = "README.md"
+authors = [
+    { name = "doabell", email = "35297086+doabell@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["bark", "notifications", "push", "async", "encryption"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+dependencies = [
+    "httpx2>=2.13.0",
+    "pycryptodome>=3.23.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ngc2000/baark"
+Documentation = "https://github.com/ngc2000/baark#readme"
+Source = "https://github.com/ngc2000/baark"
+Issues = "https://github.com/ngc2000/baark/issues"
+Releases = "https://github.com/ngc2000/baark/releases"
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+source-include = [
+    "tests/**",
+    "scripts/*.py",
+    ".github/workflows/*.yml",
+    "justfile",
+    "uv.lock",
+]
+source-exclude = [".env", ".env.*"]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.16.1",
+    "ruff>=0.16.7",
+    "twine>=7.0.0",
+    "ty>=0.0.81",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+# These rules conflict with Ruff's formatter. The Google convention below
+# handles conflicting docstring rules, including D203 and D213.
+ignore = [
+    "COM812", # Missing trailing comma
+    "COM819", # Prohibited trailing comma
+    "D206",   # Docstring tab indentation
+    "D300",   # Triple single quotes
+    "E111",   # Indentation with invalid multiple
+    "E114",   # Comment indentation with invalid multiple
+    "E117",   # Over-indented
+    "Q000",   # Inline string quotes
+    "Q001",   # Multiline string quotes
+    "Q002",   # Docstring quotes
+    "Q003",   # Avoidable escaped quote
+    "Q004",   # Unnecessary escaped quote
+    "W191",   # Tab indentation
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# These tests use the standard-library unittest runner, not pytest.
+"tests/**" = ["PT009", "PT027"]
+# Development and release scripts are standalone, outside the installed package.
+"scripts/*.py" = ["INP001"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.coverage.run]
+branch = true
+source = ["baark"]
+relative_files = true
+command_line = "-m unittest discover"
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+precision = 2
